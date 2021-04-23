@@ -1,4 +1,5 @@
 ﻿using Interview_Project.Models;
+using Interview_Project.Persistence.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
 
 #nullable disable
@@ -29,18 +30,11 @@ namespace Interview_Project.Persistence
         public virtual DbSet<Titleauthor> Titleauthors { get; set; }
         public virtual DbSet<Titleview> Titleviews { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("server=localhost; database=pubs; user id=sa; password=yourStrong(!)Password");
-            }
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+
+            modelBuilder.ApplyConfiguration(new JobConfiguration());
 
             modelBuilder.Entity<Author>(entity =>
             {
@@ -49,7 +43,7 @@ namespace Interview_Project.Persistence
 
                 entity.ToTable("authors");
 
-                entity.HasIndex(e => new { e.AuLname, e.AuFname }, "aunmind");
+                entity.HasIndex(e => new {e.AuLname, e.AuFname}, "aunmind");
 
                 entity.Property(e => e.AuId)
                     .HasMaxLength(11)
@@ -141,7 +135,7 @@ namespace Interview_Project.Persistence
 
                 entity.ToTable("employee");
 
-                entity.HasIndex(e => new { e.Lname, e.Fname, e.Minit }, "employee_ind")
+                entity.HasIndex(e => new {e.Lname, e.Fname, e.Minit}, "employee_ind")
                     .IsClustered();
 
                 entity.Property(e => e.EmpId)
@@ -200,24 +194,6 @@ namespace Interview_Project.Persistence
                     .HasForeignKey(d => d.PubId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__employee__pub_id__4BAC3F29");
-            });
-
-            modelBuilder.Entity<Job>(entity =>
-            {
-                entity.ToTable("jobs");
-
-                entity.Property(e => e.JobId).HasColumnName("job_id");
-
-                entity.Property(e => e.JobDesc)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("job_desc")
-                    .HasDefaultValueSql("('New Position - title not formalized yet')");
-
-                entity.Property(e => e.MaxLvl).HasColumnName("max_lvl");
-
-                entity.Property(e => e.MinLvl).HasColumnName("min_lvl");
             });
 
             modelBuilder.Entity<PubInfo>(entity =>
@@ -313,7 +289,7 @@ namespace Interview_Project.Persistence
 
             modelBuilder.Entity<Sale>(entity =>
             {
-                entity.HasKey(e => new { e.StorId, e.OrdNum, e.TitleId })
+                entity.HasKey(e => new {e.StorId, e.OrdNum, e.TitleId})
                     .HasName("UPKCL_sales");
 
                 entity.ToTable("sales");
@@ -463,7 +439,7 @@ namespace Interview_Project.Persistence
 
             modelBuilder.Entity<Titleauthor>(entity =>
             {
-                entity.HasKey(e => new { e.AuId, e.TitleId })
+                entity.HasKey(e => new {e.AuId, e.TitleId})
                     .HasName("UPKCL_taind");
 
                 entity.ToTable("titleauthor");
