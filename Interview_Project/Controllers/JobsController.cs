@@ -42,9 +42,9 @@ namespace Interview_Project.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddJob([FromBody] JobResource jobResource)
+        public async Task<IActionResult> AddJob([FromBody] SaveJobResource jobResource)
         {
-            var job = _mapper.Map<JobResource, Job>(jobResource);
+            var job = _mapper.Map<SaveJobResource, Job>(jobResource);
             await _context.Jobs.AddAsync(job);
             await _context.SaveChangesAsync();
 
@@ -62,6 +62,20 @@ namespace Interview_Project.Controllers
             await _context.SaveChangesAsync();
             
             return Ok(_mapper.Map<Job, JobResource>(deletedJob));
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateJob(short id, [FromBody] SaveJobResource jobResource)
+        {
+            var job = await _context.Jobs.FindAsync(id);
+            _mapper.Map(jobResource, job);
+            await _context.SaveChangesAsync();
+
+            job = await _context.Jobs.Include(j => j.Employees).FirstAsync(j => j.JobId == id);
+            var result = _mapper.Map<Job, JobResource>(job);
+
+            return Ok(result);
+
         }
     }
 }
