@@ -1,4 +1,6 @@
 using AutoMapper;
+using Interview_Project.Controllers.Resources;
+using Interview_Project.Models;
 
 namespace Interview_Project.Mapping
 {
@@ -6,7 +8,8 @@ namespace Interview_Project.Mapping
     {
         public MapperProfile()
         {
-            
+            CreateMap<Job, JobResource>();
+            CreateMap<Employee, EmployeeResource>();
         }
     }
 }
