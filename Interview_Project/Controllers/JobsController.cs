@@ -29,5 +29,16 @@ namespace Interview_Project.Controllers
 
             return Ok(_mapper.Map<IList<Job>, IList<JobResource>>(jobs));
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetJob(short id)
+        {
+            var job = await _context.Jobs.Include(j => j.Employees).FirstOrDefaultAsync(j => j.JobId == id);
+
+            if (job == null)
+                return NotFound();
+
+            return Ok(_mapper.Map<Job, JobResource>(job));
+        }
     }
 }
