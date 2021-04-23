@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Interview_Project.Mapping;
 using Interview_Project.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,6 +33,9 @@ namespace Interview_Project
             services.AddDbContext<PubsContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Default"))
                     .LogTo(Console.WriteLine, LogLevel.Information));
+
+            // Register AutoMapper to IService connection.
+            services.AddAutoMapper(typeof(MapperProfile));
             
             services.AddControllers();
             services.AddSwaggerGen(c =>
