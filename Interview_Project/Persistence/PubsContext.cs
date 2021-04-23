@@ -1,4 +1,5 @@
 ﻿using Interview_Project.Models;
+using Interview_Project.Persistence.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
 
 #nullable disable
@@ -32,6 +33,8 @@ namespace Interview_Project.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+
+            modelBuilder.ApplyConfiguration(new JobConfiguration());
 
             modelBuilder.Entity<Author>(entity =>
             {
@@ -191,24 +194,6 @@ namespace Interview_Project.Persistence
                     .HasForeignKey(d => d.PubId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__employee__pub_id__4BAC3F29");
-            });
-
-            modelBuilder.Entity<Job>(entity =>
-            {
-                entity.ToTable("jobs");
-
-                entity.Property(e => e.JobId).HasColumnName("job_id");
-
-                entity.Property(e => e.JobDesc)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("job_desc")
-                    .HasDefaultValueSql("('New Position - title not formalized yet')");
-
-                entity.Property(e => e.MaxLvl).HasColumnName("max_lvl");
-
-                entity.Property(e => e.MinLvl).HasColumnName("min_lvl");
             });
 
             modelBuilder.Entity<PubInfo>(entity =>
