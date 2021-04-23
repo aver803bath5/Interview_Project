@@ -10,6 +10,8 @@ namespace Interview_Project.Mapping
         {
             CreateMap<Job, JobResource>();
             CreateMap<Employee, EmployeeResource>();
+
+            CreateMap<JobResource, Job>();
         }
     }
 }

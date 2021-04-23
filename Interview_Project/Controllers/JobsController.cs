@@ -40,5 +40,20 @@ namespace Interview_Project.Controllers
 
             return Ok(_mapper.Map<Job, JobResource>(job));
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddJob([FromBody] JobResource jobResource)
+        {
+            var job = _mapper.Map<JobResource, Job>(jobResource);
+            await _context.Jobs.AddAsync(job);
+            await _context.SaveChangesAsync();
+
+            var addedJob = await _context.Jobs.Include(j => j.Employees).FirstAsync(j => j.JobId == job.JobId);
+            var result = _mapper.Map<Job, JobResource>(addedJob);
+            
+            return Ok(result);
+        }
+        
+        
     }
 }
