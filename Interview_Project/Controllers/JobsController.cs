@@ -53,7 +53,15 @@ namespace Interview_Project.Controllers
             
             return Ok(result);
         }
-        
-        
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteJob(short id)
+        {
+            var deletedJob = await _context.Jobs.FindAsync(id);
+            _context.Remove(deletedJob);
+            await _context.SaveChangesAsync();
+            
+            return Ok(_mapper.Map<Job, JobResource>(deletedJob));
+        }
     }
 }
