@@ -29,15 +29,6 @@ namespace Interview_Project.Persistence
         public virtual DbSet<Titleauthor> Titleauthors { get; set; }
         public virtual DbSet<Titleview> Titleviews { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("server=localhost; database=pubs; user id=sa; password=yourStrong(!)Password");
-            }
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
@@ -49,7 +40,7 @@ namespace Interview_Project.Persistence
 
                 entity.ToTable("authors");
 
-                entity.HasIndex(e => new { e.AuLname, e.AuFname }, "aunmind");
+                entity.HasIndex(e => new {e.AuLname, e.AuFname}, "aunmind");
 
                 entity.Property(e => e.AuId)
                     .HasMaxLength(11)
@@ -141,7 +132,7 @@ namespace Interview_Project.Persistence
 
                 entity.ToTable("employee");
 
-                entity.HasIndex(e => new { e.Lname, e.Fname, e.Minit }, "employee_ind")
+                entity.HasIndex(e => new {e.Lname, e.Fname, e.Minit}, "employee_ind")
                     .IsClustered();
 
                 entity.Property(e => e.EmpId)
@@ -313,7 +304,7 @@ namespace Interview_Project.Persistence
 
             modelBuilder.Entity<Sale>(entity =>
             {
-                entity.HasKey(e => new { e.StorId, e.OrdNum, e.TitleId })
+                entity.HasKey(e => new {e.StorId, e.OrdNum, e.TitleId})
                     .HasName("UPKCL_sales");
 
                 entity.ToTable("sales");
@@ -463,7 +454,7 @@ namespace Interview_Project.Persistence
 
             modelBuilder.Entity<Titleauthor>(entity =>
             {
-                entity.HasKey(e => new { e.AuId, e.TitleId })
+                entity.HasKey(e => new {e.AuId, e.TitleId})
                     .HasName("UPKCL_taind");
 
                 entity.ToTable("titleauthor");
