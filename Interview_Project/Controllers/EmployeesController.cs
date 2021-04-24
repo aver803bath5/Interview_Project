@@ -13,34 +13,63 @@ namespace Interview_Project.Controllers
     [Route("/api/employees")]
     public class EmployeesController : Controller
     {
-        private readonly IEmployeeRepository _repository;
+        private readonly IEmployeeRepository _employeeRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IEmployeeValidator _validator;
 
-        public EmployeesController(IEmployeeRepository repository, IUnitOfWork unitOfWork, IMapper mapper)
+        public EmployeesController(IEmployeeRepository employeeRepository,
+            IUnitOfWork unitOfWork, IMapper mapper, IEmployeeValidator validator)
         {
-            _repository = repository;
+            _employeeRepository = employeeRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _validator = validator;
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> GetEmployees()
         {
-            var employees = await _repository.GetEmployees();
-            
+            var employees = await _employeeRepository.GetEmployees();
+
             return Ok(_mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeResource>>(employees));
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEmployee(string id)
         {
-            var employee = await _repository.GetEmployee(id);
+            var employee = await _employeeRepository.GetEmployee(id);
 
             if (employee == null)
                 return NotFound();
 
             return Ok(_mapper.Map<Employee, EmployeeResource>(employee));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateEmployee([FromBody] EmployeeResource employeeResource)
+        {
+            // Check if EmpId is match the constraint of emp_id column of employee table.
+            if (!_validator.ValidateEmpId(employeeResource.EmpId))
+                return BadRequest("EmpId is invalid");
+
+            if (!_validator.ValidateJobLvl(employeeResource.JobLvl.GetValueOrDefault()))
+                return BadRequest(
+                    $"JobLvl should be greater than {JobConstraints.MinJobLevel} and less than {JobConstraints.MaxJobLevel}");
+
+            if (!await _validator.ValidateJobId(employeeResource.JobId))
+                return BadRequest("The job does not exist");
+
+            // TODO: return BadRequest when the employeeResource.PubId doesn't belong to any publishers in the pubs table.
+
+            var employee = _mapper.Map<EmployeeResource, Employee>(employeeResource);
+            await _employeeRepository.AddAsync(employee);
+            await _unitOfWork.CompleteAsync();
+
+            var addedEmployee = await _employeeRepository.GetEmployee(employee.EmpId);
+            var result = _mapper.Map<Employee, EmployeeResource>(addedEmployee);
+
+            return Ok(result);
         }
     }
 }
