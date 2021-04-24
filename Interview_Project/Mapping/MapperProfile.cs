@@ -9,7 +9,10 @@ namespace Interview_Project.Mapping
         public MapperProfile()
         {
             CreateMap<Job, JobResource>();
+            CreateMap<Job, JobWithoutRelatedResource>();
             CreateMap<Employee, EmployeeResource>();
+            CreateMap<Employee, EmployeeWithoutRelatedResource>();
+            CreateMap<Publisher, PublisherWithoutRelatedResource>();
 
             CreateMap<JobResource, Job>();
             CreateMap<SaveJobResource, Job>()
