@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Interview_Project.Models;
+using Interview_Project.Core.Domain;
 
 namespace Interview_Project.Core.Repositories
 {

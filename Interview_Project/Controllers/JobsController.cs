@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Interview_Project.Controllers.Resources;
+using Interview_Project.Core.Domain;
 using Interview_Project.Core.Repositories;
-using Interview_Project.Models;
 using Interview_Project.Persistence;
 using Microsoft.AspNetCore.Mvc;
 

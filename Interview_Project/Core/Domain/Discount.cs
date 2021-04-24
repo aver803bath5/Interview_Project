@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#nullable disable
 
-#nullable disable
-
-namespace Interview_Project.Models
+namespace Interview_Project.Core.Domain
 {
     public partial class Discount
     {

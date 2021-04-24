@@ -1,4 +1,4 @@
-using Interview_Project.Models;
+using Interview_Project.Core.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
