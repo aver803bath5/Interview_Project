@@ -15,6 +15,8 @@ namespace Interview_Project.Persistence.Repositories
             _context = context;
         }
 
+        // Use includeEmployee flag to determine whether to join employee table because sometimes we only need to return
+        // job object like Inserting, Update operations.
         public async Task<IEnumerable<Job>> GetJobs(bool includeEmployee = true)
         {
             if (!includeEmployee)
@@ -23,6 +25,8 @@ namespace Interview_Project.Persistence.Repositories
             return await _context.Jobs.Include(j => j.Employees).ToListAsync();
         }
 
+        // Use includeEmployee flag to determine whether to join employee table because sometimes we only need to return
+        // job object like Inserting, Update operations.
         public async Task<Job> GetJob(short id, bool includeEmployee = true)
         {
             if (!includeEmployee)
