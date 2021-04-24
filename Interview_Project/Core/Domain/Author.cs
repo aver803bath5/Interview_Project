@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 #nullable disable
 
-namespace Interview_Project.Models
+namespace Interview_Project.Core.Domain
 {
     public partial class Author
     {

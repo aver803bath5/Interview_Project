@@ -1,6 +1,6 @@
 using AutoMapper;
 using Interview_Project.Controllers.Resources;
-using Interview_Project.Models;
+using Interview_Project.Core.Domain;
 
 namespace Interview_Project.Mapping
 {

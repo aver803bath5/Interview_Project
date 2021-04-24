@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Interview_Project.Core.Domain;
 using Interview_Project.Core.Repositories;
-using Interview_Project.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Interview_Project.Persistence.Repositories

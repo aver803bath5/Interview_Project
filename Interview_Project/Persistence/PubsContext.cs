@@ -1,4 +1,4 @@
-﻿using Interview_Project.Models;
+﻿using Interview_Project.Core.Domain;
 using Interview_Project.Persistence.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
 
