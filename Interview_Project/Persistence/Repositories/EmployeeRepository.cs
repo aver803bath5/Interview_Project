@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Interview_Project.Controllers.Resources;
 using Interview_Project.Core.Domain;
 using Interview_Project.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,17 @@ namespace Interview_Project.Persistence.Repositories
                 .Include(e => e.Job)
                 .Include(e => e.Pub)
                 .ToListAsync();
+        }
+
+        public async Task<Employee> GetEmployee(string id, bool includeRelated = true)
+        {
+            if (!includeRelated)
+                return await _context.Employees.FindAsync(id);
+
+            return await  _context.Employees
+                .Include(e => e.Job)
+                .Include(e => e.Pub)
+                .SingleOrDefaultAsync(e => e.EmpId == id);
         }
     }
 }

@@ -27,9 +27,20 @@ namespace Interview_Project.Controllers
         [HttpGet]
         public async Task<IActionResult> GetEmployees()
         {
-            var result = await _repository.GetEmployees();
+            var employees = await _repository.GetEmployees();
             
-            return Ok(_mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeResource>>(result));
+            return Ok(_mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeResource>>(employees));
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetEmployee(string id)
+        {
+            var employee = await _repository.GetEmployee(id);
+
+            if (employee == null)
+                return NotFound();
+
+            return Ok(_mapper.Map<Employee, EmployeeResource>(employee));
         }
     }
 }
