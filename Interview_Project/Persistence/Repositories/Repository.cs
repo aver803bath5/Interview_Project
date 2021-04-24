@@ -7,13 +7,11 @@ namespace Interview_Project.Persistence.Repositories
 {
     public class Repository<TEntity, TContext> : IRepository<TEntity> where TEntity : class where TContext : DbContext
     {
-        private readonly TContext _context;
         private readonly DbSet<TEntity> _entities;
 
         public Repository(TContext context)
         {
-            _context = context;
-            _entities = _context.Set<TEntity>();
+            _entities = context.Set<TEntity>();
         }
 
         public async Task<IEnumerable<TEntity>> GetAllAsync()
@@ -33,7 +31,17 @@ namespace Interview_Project.Persistence.Repositories
                 return entity;
 
             _entities.Remove(entity);
-            await _context.SaveChangesAsync();
+
+            return entity;
+        }
+
+        public async Task<TEntity> DeleteAsync(short id)
+        {
+            var entity = await _entities.FindAsync(id);
+            if (entity == null)
+                return entity;
+
+            _entities.Remove(entity);
 
             return entity;
         }
@@ -41,7 +49,6 @@ namespace Interview_Project.Persistence.Repositories
         public async Task<TEntity> AddAsync(TEntity entity)
         {
             await _entities.AddAsync(entity);
-            await _context.SaveChangesAsync();
             return entity;
         }
     }
