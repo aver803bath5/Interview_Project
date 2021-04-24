@@ -40,6 +40,8 @@ namespace Interview_Project
             services.AddAutoMapper(typeof(MapperProfile));
 
             services.AddScoped<IJobsRepository, JobRepository>();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             
             services.AddControllers();
             services.AddSwaggerGen(c =>
