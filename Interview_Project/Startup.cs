@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Interview_Project.Core;
 using Interview_Project.Core.Repositories;
 using Interview_Project.Mapping;
 using Interview_Project.Persistence;
@@ -40,6 +41,7 @@ namespace Interview_Project
             services.AddAutoMapper(typeof(MapperProfile));
 
             services.AddScoped<IJobsRepository, JobRepository>();
+            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             
