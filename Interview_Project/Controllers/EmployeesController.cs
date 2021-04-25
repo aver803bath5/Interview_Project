@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -100,25 +99,11 @@ namespace Interview_Project.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateEmployee(string id, [FromBody] EmployeeResource employeeResource)
         {
-            // Check if EmpId is match the constraint of emp_id column of employee table.
-            // if (!_validator.ValidateEmpId(id))
-            //     return BadRequest("EmpId is invalid");
-            //
-            // if (!_validator.ValidateJobLvl(employeeResource.JobLvl.GetValueOrDefault()))
-            //     return BadRequest(
-            //         $"JobLvl should be greater than {JobConstraints.MinJobLevel} and less than {JobConstraints.MaxJobLevel}");
-            //
-            // if (!await _validator.ValidateJobId(employeeResource.JobId))
-            //     return BadRequest("The job does not exist");
-            //
-            // if (!await _validator.ValidateJobLvlAndJobId(employeeResource.JobId,
-            //     employeeResource.JobLvl.GetValueOrDefault()))
-            //     return BadRequest("The job level is out of the range of the given job.");
-            Console.WriteLine(employeeResource.PubId);
-            if (employeeResource.HireDate == DateTime.MinValue)
-                employeeResource.HireDate = DateTime.Now;
+            // TODO: Add validation code to validate given jobLvl, jobId, pubId, and hireDate values.
+            var employee = await _employeeRepository.GetEmployee(id, false);
+            if (employee == null)
+                return NotFound();
 
-            var employee = await _employeeRepository.GetEmployee(id);
             _mapper.Map(employeeResource, employee);
             await _unitOfWork.CompleteAsync();
 
