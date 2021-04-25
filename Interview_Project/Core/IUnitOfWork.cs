@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
-namespace Interview_Project.Persistence
+namespace Interview_Project.Core
 {
     public interface IUnitOfWork
     {

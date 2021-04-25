@@ -1,15 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Interview_Project.Controllers;
+using Interview_Project.Core;
 using Interview_Project.Core.Repositories;
 using Interview_Project.Mapping;
 using Interview_Project.Persistence;
 using Interview_Project.Persistence.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,6 +37,8 @@ namespace Interview_Project
             services.AddAutoMapper(typeof(MapperProfile));
 
             services.AddScoped<IJobsRepository, JobRepository>();
+            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped<IEmployeeValidator, EmployeeValidator>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             

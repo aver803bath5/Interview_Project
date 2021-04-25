@@ -2,7 +2,7 @@ using System;
 
 namespace Interview_Project.Controllers.Resources
 {
-    public class EmployeeResource
+    public class EmployeeWithoutRelatedResource
     {
         public string EmpId { get; set; }
         public string Fname { get; set; }
@@ -12,8 +12,5 @@ namespace Interview_Project.Controllers.Resources
         public byte? JobLvl { get; set; }
         public string PubId { get; set; }
         public DateTime HireDate { get; set; }
-        
-        public virtual JobWithoutRelatedResource Job { get; set; }
-        public virtual PublisherWithoutRelatedResource Pub { get; set; }
     }
 }

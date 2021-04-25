@@ -6,7 +6,7 @@ namespace Interview_Project.Controllers.Resources
     {
         public JobResource()
         {
-            Employees = new HashSet<EmployeeResource>();
+            Employees = new HashSet<EmployeeWithoutRelatedResource>();
         }
 
         public short JobId { get; set; }
@@ -14,6 +14,6 @@ namespace Interview_Project.Controllers.Resources
         public byte MinLvl { get; set; }
         public byte MaxLvl { get; set; }
 
-        public virtual ICollection<EmployeeResource> Employees { get; set; }
+        public virtual ICollection<EmployeeWithoutRelatedResource> Employees { get; set; }
     }
 }
