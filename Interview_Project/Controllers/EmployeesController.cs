@@ -49,16 +49,23 @@ namespace Interview_Project.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateEmployee([FromBody] EmployeeResource employeeResource)
         {
+            if (await _validator.ValidateIfEmployeeExisted(employeeResource.EmpId))
+                return BadRequest("The EmpId existed.");
+            
             // Check if EmpId is match the constraint of emp_id column of employee table.
             if (!_validator.ValidateEmpId(employeeResource.EmpId))
                 return BadRequest("EmpId is invalid");
-
+            
             if (!_validator.ValidateJobLvl(employeeResource.JobLvl.GetValueOrDefault()))
                 return BadRequest(
                     $"JobLvl should be greater than {JobConstraints.MinJobLevel} and less than {JobConstraints.MaxJobLevel}");
-
+            
             if (!await _validator.ValidateJobId(employeeResource.JobId))
                 return BadRequest("The job does not exist");
+            
+            if (!await _validator.ValidateJobLvlAndJobId(employeeResource.JobId,
+                employeeResource.JobLvl.GetValueOrDefault()))
+                return BadRequest("The job level is out of the range of the given job.");
 
             // TODO: return BadRequest when the employeeResource.PubId doesn't belong to any publishers in the pubs table.
 
@@ -70,6 +77,18 @@ namespace Interview_Project.Controllers
             var result = _mapper.Map<Employee, EmployeeResource>(addedEmployee);
 
             return Ok(result);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteEmployee(string id)
+        {
+            var deletedEmployee = await _employeeRepository.DeleteAsync(id);
+            if (deletedEmployee == null)
+                return NotFound();
+
+            await _unitOfWork.CompleteAsync();
+
+            return Ok(deletedEmployee);
         }
     }
 }
