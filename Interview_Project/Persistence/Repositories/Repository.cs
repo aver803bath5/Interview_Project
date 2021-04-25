@@ -46,6 +46,17 @@ namespace Interview_Project.Persistence.Repositories
             return entity;
         }
 
+        public async Task<TEntity> DeleteAsync(string id)
+        {
+            var entity = await _entities.FindAsync(id);
+            if (entity == null)
+                return entity;
+
+            _entities.Remove(entity);
+
+            return entity;
+        }
+
         public async Task<TEntity> AddAsync(TEntity entity)
         {
             await _entities.AddAsync(entity);

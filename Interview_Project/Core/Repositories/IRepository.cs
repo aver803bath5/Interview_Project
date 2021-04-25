@@ -9,6 +9,7 @@ namespace Interview_Project.Core.Repositories
         Task<T> GetAsync(int id);
         Task<T> DeleteAsync(int id);
         Task<T> DeleteAsync(short id);
+        Task<T> DeleteAsync(string id);
         Task<T> AddAsync(T entity);
     }
 }
