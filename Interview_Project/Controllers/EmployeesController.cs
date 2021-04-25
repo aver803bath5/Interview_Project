@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -49,23 +50,28 @@ namespace Interview_Project.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateEmployee([FromBody] EmployeeResource employeeResource)
         {
-            if (await _validator.ValidateIfEmployeeExisted(employeeResource.EmpId))
+            var employeeResourceEmpId = employeeResource.EmpId;
+            var employeeResourceJobLvl = employeeResource.JobLvl;
+            var employeeResourceJobId = employeeResource.JobId;
+
+            if (await _validator.ValidateIfEmployeeExisted(employeeResourceEmpId))
                 return BadRequest("The EmpId existed.");
-            
             // Check if EmpId is match the constraint of emp_id column of employee table.
-            if (!_validator.ValidateEmpId(employeeResource.EmpId))
+            if (!_validator.ValidateEmpId(employeeResourceEmpId))
                 return BadRequest("EmpId is invalid");
-            
-            if (!_validator.ValidateJobLvl(employeeResource.JobLvl.GetValueOrDefault()))
-                return BadRequest(
-                    $"JobLvl should be greater than {JobConstraints.MinJobLevel} and less than {JobConstraints.MaxJobLevel}");
-            
-            if (!await _validator.ValidateJobId(employeeResource.JobId))
+
+            if (!await _validator.ValidateJobId(employeeResourceJobId))
                 return BadRequest("The job does not exist");
-            
-            if (!await _validator.ValidateJobLvlAndJobId(employeeResource.JobId,
-                employeeResource.JobLvl.GetValueOrDefault()))
-                return BadRequest("The job level is out of the range of the given job.");
+
+            // If the input values of jobId or jobLvl is other than the default value. We must verify if the given
+            // jobLvl is in the range of the max value and the min value of the job related with the given jobId.
+            if (employeeResourceJobId != EmployeeConstraint.JobIdDefaultValue ||
+                employeeResourceJobLvl != EmployeeConstraint.JobLvlDefaultValue)
+            {
+                if (!await _validator.ValidateJobLvlAndJobId(employeeResourceJobId,
+                    employeeResourceJobLvl.GetValueOrDefault()))
+                    return BadRequest("The job level is out of the range of the given job.");
+            }
 
             // TODO: return BadRequest when the employeeResource.PubId doesn't belong to any publishers in the pubs table.
 
@@ -89,6 +95,37 @@ namespace Interview_Project.Controllers
             await _unitOfWork.CompleteAsync();
 
             return Ok(deletedEmployee);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateEmployee(string id, [FromBody] EmployeeResource employeeResource)
+        {
+            // Check if EmpId is match the constraint of emp_id column of employee table.
+            // if (!_validator.ValidateEmpId(id))
+            //     return BadRequest("EmpId is invalid");
+            //
+            // if (!_validator.ValidateJobLvl(employeeResource.JobLvl.GetValueOrDefault()))
+            //     return BadRequest(
+            //         $"JobLvl should be greater than {JobConstraints.MinJobLevel} and less than {JobConstraints.MaxJobLevel}");
+            //
+            // if (!await _validator.ValidateJobId(employeeResource.JobId))
+            //     return BadRequest("The job does not exist");
+            //
+            // if (!await _validator.ValidateJobLvlAndJobId(employeeResource.JobId,
+            //     employeeResource.JobLvl.GetValueOrDefault()))
+            //     return BadRequest("The job level is out of the range of the given job.");
+            Console.WriteLine(employeeResource.PubId);
+            if (employeeResource.HireDate == DateTime.MinValue)
+                employeeResource.HireDate = DateTime.Now;
+
+            var employee = await _employeeRepository.GetEmployee(id);
+            _mapper.Map(employeeResource, employee);
+            await _unitOfWork.CompleteAsync();
+
+            employee = await _employeeRepository.GetEmployee(id, false);
+            var result = _mapper.Map<Employee, EmployeeWithoutRelatedResource>(employee);
+
+            return Ok(result);
         }
     }
 }
