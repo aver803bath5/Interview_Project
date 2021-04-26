@@ -12,7 +12,10 @@ namespace Interview_Project.Mapping
             CreateMap<Job, JobWithoutRelatedResource>();
             CreateMap<Employee, EmployeeResource>();
             CreateMap<Employee, EmployeeWithoutRelatedResource>();
+            CreateMap<Publisher, PublisherResource>();
             CreateMap<Publisher, PublisherWithoutRelatedResource>();
+            CreateMap<Title, TitleWithoutRelated>();
+            CreateMap<PubInfo, PubInfoWithoutRelative>();
 
             CreateMap<JobResource, Job>();
             CreateMap<SaveJobResource, Job>()

@@ -6,8 +6,8 @@ namespace Interview_Project.Controllers.Resources
     {
         public PublisherResource()
         {
-            Employees = new HashSet<EmployeeResource>();
-            // Titles = new HashSet<Title>();
+            Employees = new HashSet<EmployeeWithoutRelatedResource>();
+            Titles = new HashSet<TitleWithoutRelated>();
         }
 
         public string PubId { get; set; }
@@ -16,8 +16,8 @@ namespace Interview_Project.Controllers.Resources
         public string State { get; set; }
         public string Country { get; set; }
 
-        // public virtual PubInfo PubInfo { get; set; }
-        public virtual ICollection<EmployeeResource> Employees { get; set; }
-        // public virtual ICollection<Title> Titles { get; set; }    }
+        public virtual PubInfoWithoutRelative PubInfo { get; set; }
+        public virtual ICollection<EmployeeWithoutRelatedResource> Employees { get; set; }
+        public virtual ICollection<TitleWithoutRelated> Titles { get; set; }
     }
 }
