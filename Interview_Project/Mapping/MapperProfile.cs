@@ -17,6 +17,7 @@ namespace Interview_Project.Mapping
             CreateMap<Title, TitleWithoutRelated>();
             CreateMap<PubInfo, PubInfoWithoutRelative>();
 
+            CreateMap<SavePublisherResource, Publisher>();
             CreateMap<JobResource, Job>();
             CreateMap<SaveJobResource, Job>()
                 .ForMember(j => j.JobId, opt => opt.Ignore());
