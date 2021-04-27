@@ -36,6 +36,7 @@ namespace Interview_Project.Persistence
 
             modelBuilder.ApplyConfiguration(new JobConfiguration());
             modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+            modelBuilder.ApplyConfiguration(new PublisherConfiguration());
 
             modelBuilder.Entity<Author>(entity =>
             {
@@ -154,42 +155,6 @@ namespace Interview_Project.Persistence
                     .HasForeignKey<PubInfo>(d => d.PubId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__pub_info__pub_id__440B1D61");
-            });
-
-            modelBuilder.Entity<Publisher>(entity =>
-            {
-                entity.HasKey(e => e.PubId)
-                    .HasName("UPKCL_pubind");
-
-                entity.ToTable("publishers");
-
-                entity.Property(e => e.PubId)
-                    .HasMaxLength(4)
-                    .IsUnicode(false)
-                    .HasColumnName("pub_id")
-                    .IsFixedLength(true);
-
-                entity.Property(e => e.City)
-                    .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasColumnName("city");
-
-                entity.Property(e => e.Country)
-                    .HasMaxLength(30)
-                    .IsUnicode(false)
-                    .HasColumnName("country")
-                    .HasDefaultValueSql("('USA')");
-
-                entity.Property(e => e.PubName)
-                    .HasMaxLength(40)
-                    .IsUnicode(false)
-                    .HasColumnName("pub_name");
-
-                entity.Property(e => e.State)
-                    .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasColumnName("state")
-                    .IsFixedLength(true);
             });
 
             modelBuilder.Entity<Roysched>(entity =>
