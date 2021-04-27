@@ -44,19 +44,29 @@ namespace Interview_Project.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddPublisher(SavePublisherResource saveResource)
+        public async Task<IActionResult> AddPublisher(AddPublisherResource addResource)
         {
-            if (await _publishersRepository.GetPublisher(saveResource.PubId, false) != null)
+            if (await _publishersRepository.GetPublisher(addResource.PubId, false) != null)
                 return BadRequest("The duplicated pubId");
 
-            if (string.IsNullOrWhiteSpace(saveResource.Country))
-                saveResource.Country = PublisherConstraints.DefaultCountryName;
-
-            var publisher = _mapper.Map<SavePublisherResource, Publisher>(saveResource);
+            var publisher = _mapper.Map<AddPublisherResource, Publisher>(addResource);
             var result = await _publishersRepository.AddAsync(publisher);
             await _unitOfWork.CompleteAsync();
 
             return Ok(_mapper.Map<Publisher, PublisherResource>(result));
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdatePublisher(string id, UpdatePublisherResource updateResource)
+        {
+            if (await _publishersRepository.GetPublisher(id, false) == null)
+                return NotFound();
+
+            var publisher = await _publishersRepository.GetPublisher(id, false);
+            _mapper.Map(updateResource, publisher);
+            await _unitOfWork.CompleteAsync();
+
+            return Ok(_mapper.Map<Publisher, PublisherResource>(publisher));
         }
     }
 }

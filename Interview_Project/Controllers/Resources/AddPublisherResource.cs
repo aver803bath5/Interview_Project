@@ -5,18 +5,20 @@ using System.Text.RegularExpressions;
 
 namespace Interview_Project.Controllers.Resources
 {
-    public class SavePublisherResource  : IValidatableObject
+    public class AddPublisherResource  : IValidatableObject
     {
         [Required]
         public string PubId { get; set; }
         [MaxLength(40)]
+        [Required]
         public string PubName { get; set; }
         [MaxLength(20)]
+        [Required]
         public string City { get; set; }
         [MaxLength(2)]
         public string State { get; set; }
         [MaxLength(30)]
-        [DefaultValue(PublisherConstraints.DefaultCountryName)]
+        [Required]
         public string Country { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
