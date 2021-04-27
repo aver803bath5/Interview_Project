@@ -38,6 +38,8 @@ namespace Interview_Project
 
             services.AddScoped<IJobsRepository, JobRepository>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped<IPublishersRepository, PublishersRepository>();
+            
             services.AddScoped<IEmployeeValidator, EmployeeValidator>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();

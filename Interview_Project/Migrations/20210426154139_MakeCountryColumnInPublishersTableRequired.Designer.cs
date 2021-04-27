@@ -4,14 +4,16 @@ using Interview_Project.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Interview_Project.Migrations
 {
     [DbContext(typeof(PubsContext))]
-    partial class PubsContextModelSnapshot : ModelSnapshot
+    [Migration("20210426154139_MakeCountryColumnInPublishersTableRequired")]
+    partial class MakeCountryColumnInPublishersTableRequired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -265,13 +267,14 @@ namespace Interview_Project.Migrations
 
                     b.Property<string>("Country")
                         .IsRequired()
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(30)
                         .IsUnicode(false)
                         .HasColumnType("varchar(30)")
-                        .HasColumnName("country");
+                        .HasColumnName("country")
+                        .HasDefaultValueSql("('USA')");
 
                     b.Property<string>("PubName")
-                        .IsRequired()
                         .HasMaxLength(40)
                         .IsUnicode(false)
                         .HasColumnType("varchar(40)")
