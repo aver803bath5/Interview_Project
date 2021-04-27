@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Interview_Project.ActionFilters;
 using Interview_Project.Controllers.Resources;
 using Interview_Project.Core;
 using Interview_Project.Core.Domain;
@@ -36,7 +37,7 @@ namespace Interview_Project.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPublisher(string id)
         {
-            var publisher = await _publishersRepository.GetPublisher(id);
+            var publisher = await _publishersRepository.GetPublisher(id.Trim());
             if (publisher == null)
                 return NotFound();
 
@@ -44,6 +45,7 @@ namespace Interview_Project.Controllers
         }
 
         [HttpPost]
+        [TrimInputStrings]
         public async Task<IActionResult> AddPublisher(AddPublisherResource addResource)
         {
             if (await _publishersRepository.GetPublisher(addResource.PubId, false) != null)
@@ -57,6 +59,7 @@ namespace Interview_Project.Controllers
         }
 
         [HttpPut("{id}")]
+        [TrimInputStrings]
         public async Task<IActionResult> UpdatePublisher(string id, UpdatePublisherResource updateResource)
         {
             if (await _publishersRepository.GetPublisher(id, false) == null)
