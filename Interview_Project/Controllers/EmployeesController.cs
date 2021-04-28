@@ -38,7 +38,7 @@ namespace Interview_Project.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEmployee(string id)
         {
-            var employee = await _employeeRepository.GetEmployee(id);
+            var employee = await _employeeRepository.GetEmployee(id.Trim());
 
             if (employee == null)
                 return NotFound();
@@ -87,7 +87,7 @@ namespace Interview_Project.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEmployee(string id)
         {
-            var deletedEmployee = await _employeeRepository.DeleteAsync(id);
+            var deletedEmployee = await _employeeRepository.DeleteAsync(id.Trim());
             if (deletedEmployee == null)
                 return NotFound();
 
