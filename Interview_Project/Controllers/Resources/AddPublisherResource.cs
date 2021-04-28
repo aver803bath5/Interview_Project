@@ -18,7 +18,7 @@ namespace Interview_Project.Controllers.Resources
             var reg = new Regex(PublisherConstraints.PudIdPattern);
             if (!reg.IsMatch(PubId))
             {
-                yield return new ValidationResult("PubId is not match the pattern.");
+                yield return new ValidationResult("PubId does not match the pattern.");
             }
 
             if (string.IsNullOrWhiteSpace(PubName))
