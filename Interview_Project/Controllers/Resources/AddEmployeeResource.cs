@@ -21,7 +21,7 @@ namespace Interview_Project.Controllers.Resources
         [Required]
         public short JobId { get; set; }
         [Required]
-        public byte? JobLvl { get; set; }
+        public byte JobLvl { get; set; }
         [Required]
         public string PubId { get; set; }
         [Required]
