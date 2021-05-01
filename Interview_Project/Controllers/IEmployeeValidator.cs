@@ -4,10 +4,8 @@ namespace Interview_Project.Controllers
 {
     public interface IEmployeeValidator
     {
-        bool ValidateEmpId(string empId);
-        Task<bool> ValidateJobId(short jobId);
-        bool ValidateJobLvl(byte jobLvl);
-        Task<bool> ValidateJobLvlAndJobId(short jobId, byte jobLvl);
+        Task<bool> ValidateIfTheJobExists(short jobId);
         Task<bool> ValidateIfEmployeeExisted(string empId);
+        Task<bool> ValidateJobLvlIsWithinTheRangeOfTheGivenJob(short jobId, byte jobLvl);
     }
 }
