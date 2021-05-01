@@ -4,14 +4,16 @@ using Interview_Project.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Interview_Project.Migrations
 {
     [DbContext(typeof(PubsContext))]
-    partial class PubsContextModelSnapshot : ModelSnapshot
+    [Migration("20210428113932_RenameIndexInEmployeesTable")]
+    partial class RenameIndexInEmployeesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -562,13 +564,13 @@ namespace Interview_Project.Migrations
                     b.HasOne("Interview_Project.Core.Domain.Job", "Job")
                         .WithMany("Employees")
                         .HasForeignKey("JobId")
-                        .HasConstraintName("FK__employees__job_id__48CFD27E")
+                        .HasConstraintName("FK__employee__job_id__48CFD27E")
                         .IsRequired();
 
                     b.HasOne("Interview_Project.Core.Domain.Publisher", "Pub")
                         .WithMany("Employees")
                         .HasForeignKey("PubId")
-                        .HasConstraintName("FK__employees__pub_id__4BAC3F29")
+                        .HasConstraintName("FK__employee__pub_id__4BAC3F29")
                         .IsRequired();
 
                     b.Navigation("Job");
