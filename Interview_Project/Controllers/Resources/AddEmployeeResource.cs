@@ -1,14 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Interview_Project.Controllers.Resources
 {
-    public class AddEmployeeResource : IValidatableObject
+    public class AddEmployeeResource
     {
         [Required]
         [MaxLength(9)]
+        [RegularExpression(EmployeeConstraint.EmpIdPattern)]
         public string EmpId { get; set; }
         [Required]
         [MaxLength(20)]
@@ -26,12 +26,5 @@ namespace Interview_Project.Controllers.Resources
         public string PubId { get; set; }
         [Required]
         public DateTime HireDate { get; set; }
-        
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var reg = new Regex(EmployeeConstraint.EmpIdPattern);
-            if (!reg.IsMatch(EmpId))
-                yield return new ValidationResult("EmpId does not match the pattern");
-        }
     }
 }
