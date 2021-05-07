@@ -35,10 +35,10 @@ namespace Interview_Project.Controllers
             return Ok(_mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeResource>>(employees));
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetEmployee(string id)
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetEmployee(int id)
         {
-            var employee = await _employeeRepository.GetEmployee(id.Trim());
+            var employee = await _employeeRepository.GetEmployee(id);
 
             if (employee == null)
                 return NotFound();
@@ -53,7 +53,7 @@ namespace Interview_Project.Controllers
             var employeeResourceJobLvl = saveResource.JobLvl;
             var employeeResourceJobId = saveResource.JobId;
 
-            if (await _validator.ValidateIfEmployeeExisted(employeeResourceEmpId))
+            if (await _validator.ValidateIfEmpIdIsDuplicated(employeeResourceEmpId))
                 return BadRequest("The EmpId existed.");
             if (!await _validator.ValidateIfTheJobExists(employeeResourceJobId))
                 return BadRequest("The job doesn't exist.");
@@ -67,16 +67,16 @@ namespace Interview_Project.Controllers
             await _employeeRepository.AddAsync(employee);
             await _unitOfWork.CompleteAsync();
 
-            var addedEmployee = await _employeeRepository.GetEmployee(employee.EmpId);
+            var addedEmployee = await _employeeRepository.GetEmployee(employee.Id);
             var result = _mapper.Map<Employee, EmployeeResource>(addedEmployee);
 
             return Ok(result);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEmployee(string id)
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteEmployee(int id)
         {
-            var deletedEmployee = await _employeeRepository.DeleteAsync(id.Trim());
+            var deletedEmployee = await _employeeRepository.DeleteAsync(id);
             if (deletedEmployee == null)
                 return NotFound();
 
@@ -85,8 +85,8 @@ namespace Interview_Project.Controllers
             return Ok(deletedEmployee);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateEmployee(string id, [FromBody] SaveEmployeeResource saveEmployeeResource)
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> UpdateEmployee(int id, [FromBody] SaveEmployeeResource saveEmployeeResource)
         {
             var employee = await _employeeRepository.GetEmployee(id, false);
             if (employee == null)
