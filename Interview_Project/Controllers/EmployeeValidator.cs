@@ -10,18 +10,21 @@ namespace Interview_Project.Controllers
     {
         private readonly IJobsRepository _jobsRepository;
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IPublishersRepository _publishersRepository;
 
-        public EmployeeValidator(IJobsRepository jobsRepository, IEmployeeRepository employeeRepository)
+        public EmployeeValidator(IJobsRepository jobsRepository, IEmployeeRepository employeeRepository,
+            IPublishersRepository publishersRepository)
         {
             _jobsRepository = jobsRepository;
             _employeeRepository = employeeRepository;
+            _publishersRepository = publishersRepository;
         }
 
         public async Task<bool> ValidateIfEmployeeExisted(string empId)
         {
             return await _employeeRepository.GetEmployee(empId) != null;
         }
-        
+
         public async Task<bool> ValidateIfTheJobExists(short jobId)
         {
             var job = await _jobsRepository.GetJob(jobId, false);
@@ -36,6 +39,11 @@ namespace Interview_Project.Controllers
             var maxLvl = job.MaxLvl;
 
             return jobLvl >= minLvl && jobLvl <= maxLvl;
+        }
+
+        public async Task<bool> ValidateIfThePubExists(string pubId)
+        {
+            return await _publishersRepository.GetPublisher(pubId, false) != null;
         }
     }
 }
