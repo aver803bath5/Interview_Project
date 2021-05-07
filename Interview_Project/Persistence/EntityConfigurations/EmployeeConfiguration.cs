@@ -12,9 +12,9 @@ namespace Interview_Project.Persistence.EntityConfigurations
                 .HasName("PK_emp_id")
                 .IsClustered(false);
 
-            builder.ToTable("employee");
+            builder.ToTable("employees");
 
-            builder.HasIndex(e => new {e.Lname, e.Fname, e.Minit}, "employee_ind")
+            builder.HasIndex(e => new {e.Lname, e.Fname, e.Minit}, "employees_ind")
                 .IsClustered();
 
             builder.Property(e => e.EmpId)
@@ -66,13 +66,13 @@ namespace Interview_Project.Persistence.EntityConfigurations
                 .WithMany(p => p.Employees)
                 .HasForeignKey(d => d.JobId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__employee__job_id__48CFD27E");
+                .HasConstraintName("FK__employees__job_id__48CFD27E");
 
             builder.HasOne(d => d.Pub)
                 .WithMany(p => p.Employees)
                 .HasForeignKey(d => d.PubId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__employee__pub_id__4BAC3F29");
+                .HasConstraintName("FK__employees__pub_id__4BAC3F29");
         }
     }
 }

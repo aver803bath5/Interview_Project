@@ -24,6 +24,7 @@ namespace Interview_Project.Mapping
             CreateMap<SaveJobResource, Job>()
                 .ForMember(j => j.JobId, opt => opt.Ignore());
             CreateMap<EmployeeResource, Employee>();
+            CreateMap<SaveEmployeeResource, Employee>();
         }
     }
 }

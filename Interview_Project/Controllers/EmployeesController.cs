@@ -38,7 +38,7 @@ namespace Interview_Project.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEmployee(string id)
         {
-            var employee = await _employeeRepository.GetEmployee(id);
+            var employee = await _employeeRepository.GetEmployee(id.Trim());
 
             if (employee == null)
                 return NotFound();
@@ -47,34 +47,23 @@ namespace Interview_Project.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateEmployee([FromBody] EmployeeResource employeeResource)
+        public async Task<IActionResult> CreateEmployee([FromBody] SaveEmployeeResource saveResource)
         {
-            var employeeResourceEmpId = employeeResource.EmpId;
-            var employeeResourceJobLvl = employeeResource.JobLvl;
-            var employeeResourceJobId = employeeResource.JobId;
+            var employeeResourceEmpId = saveResource.EmpId;
+            var employeeResourceJobLvl = saveResource.JobLvl;
+            var employeeResourceJobId = saveResource.JobId;
 
             if (await _validator.ValidateIfEmployeeExisted(employeeResourceEmpId))
                 return BadRequest("The EmpId existed.");
-            // Check if EmpId is match the constraint of emp_id column of employee table.
-            if (!_validator.ValidateEmpId(employeeResourceEmpId))
-                return BadRequest("EmpId is invalid");
+            if (!await _validator.ValidateIfTheJobExists(employeeResourceJobId))
+                return BadRequest("The job doesn't exist.");
+            if (!await _validator.ValidateJobLvlIsWithinTheRangeOfTheGivenJob(employeeResourceJobId,
+                employeeResourceJobLvl))
+                return BadRequest("The given job level is not in the range of the job levels of the given job.");
+            if (!await _validator.ValidateIfThePubExists(saveResource.PubId))
+                return BadRequest("The publisher does not exist.");
 
-            if (!await _validator.ValidateJobId(employeeResourceJobId))
-                return BadRequest("The job does not exist");
-
-            // If the input values of jobId or jobLvl is other than the default value. We must verify if the given
-            // jobLvl is in the range of the max value and the min value of the job related with the given jobId.
-            if (employeeResourceJobId != EmployeeConstraint.JobIdDefaultValue ||
-                employeeResourceJobLvl != EmployeeConstraint.JobLvlDefaultValue)
-            {
-                if (!await _validator.ValidateJobLvlAndJobId(employeeResourceJobId,
-                    employeeResourceJobLvl.GetValueOrDefault()))
-                    return BadRequest("The job level is out of the range of the given job.");
-            }
-
-            // TODO: return BadRequest when the employeeResource.PubId doesn't belong to any publishers in the pubs table.
-
-            var employee = _mapper.Map<EmployeeResource, Employee>(employeeResource);
+            var employee = _mapper.Map<SaveEmployeeResource, Employee>(saveResource);
             await _employeeRepository.AddAsync(employee);
             await _unitOfWork.CompleteAsync();
 
@@ -87,7 +76,7 @@ namespace Interview_Project.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEmployee(string id)
         {
-            var deletedEmployee = await _employeeRepository.DeleteAsync(id);
+            var deletedEmployee = await _employeeRepository.DeleteAsync(id.Trim());
             if (deletedEmployee == null)
                 return NotFound();
 
@@ -97,14 +86,23 @@ namespace Interview_Project.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateEmployee(string id, [FromBody] EmployeeResource employeeResource)
+        public async Task<IActionResult> UpdateEmployee(string id, [FromBody] SaveEmployeeResource saveEmployeeResource)
         {
-            // TODO: Add validation code to validate given jobLvl, jobId, pubId, and hireDate values.
             var employee = await _employeeRepository.GetEmployee(id, false);
             if (employee == null)
                 return NotFound();
 
-            _mapper.Map(employeeResource, employee);
+            var employeeResourceJobLvl = saveEmployeeResource.JobLvl;
+            var employeeResourceJobId = saveEmployeeResource.JobId;
+            if (!await _validator.ValidateIfTheJobExists(employeeResourceJobId))
+                return BadRequest("The job doesn't exist.");
+            if (!await _validator.ValidateJobLvlIsWithinTheRangeOfTheGivenJob(employeeResourceJobId,
+                employeeResourceJobLvl))
+                return BadRequest("The given job level is not in the range of the job levels of the given job.");
+            if (!await _validator.ValidateIfThePubExists(saveEmployeeResource.PubId))
+                return BadRequest("The publisher does not exist.");
+
+            _mapper.Map(saveEmployeeResource, employee);
             await _unitOfWork.CompleteAsync();
 
             employee = await _employeeRepository.GetEmployee(id, false);

@@ -10,45 +10,40 @@ namespace Interview_Project.Controllers
     {
         private readonly IJobsRepository _jobsRepository;
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IPublishersRepository _publishersRepository;
 
-        public EmployeeValidator(IJobsRepository jobsRepository, IEmployeeRepository employeeRepository)
+        public EmployeeValidator(IJobsRepository jobsRepository, IEmployeeRepository employeeRepository,
+            IPublishersRepository publishersRepository)
         {
             _jobsRepository = jobsRepository;
             _employeeRepository = employeeRepository;
+            _publishersRepository = publishersRepository;
         }
 
         public async Task<bool> ValidateIfEmployeeExisted(string empId)
         {
             return await _employeeRepository.GetEmployee(empId) != null;
         }
-        
-        public bool ValidateEmpId(string empId)
-        {
-            var reg = new Regex(
-                @"[A-Z][A-Z][A-Z][1-9][0-9][0-9][0-9][0-9][FM]|[A-Z]-[A-Z][1-9][0-9][0-9][0-9][0-9][FM]");
-            var isFitConstraint = reg.IsMatch(empId);
-            return isFitConstraint;
-        }
 
-        public async Task<bool> ValidateJobId(short jobId)
+        public async Task<bool> ValidateIfTheJobExists(short jobId)
         {
             var job = await _jobsRepository.GetJob(jobId, false);
             return job != null;
         }
 
-        public bool ValidateJobLvl(byte jobLvl)
-        {
-            return jobLvl > JobConstraints.MinJobLevel || jobLvl < JobConstraints.MaxJobLevel;
-        }
-
         // Check if the given jobLvl value is within the max and the min value of the given job.
-        public async Task<bool> ValidateJobLvlAndJobId(short jobId, byte jobLvl)
+        public async Task<bool> ValidateJobLvlIsWithinTheRangeOfTheGivenJob(short jobId, byte jobLvl)
         {
             var job = await _jobsRepository.GetJob(jobId, false);
             var minLvl = job.MinLvl;
             var maxLvl = job.MaxLvl;
 
             return jobLvl >= minLvl && jobLvl <= maxLvl;
+        }
+
+        public async Task<bool> ValidateIfThePubExists(string pubId)
+        {
+            return await _publishersRepository.GetPublisher(pubId, false) != null;
         }
     }
 }
