@@ -47,11 +47,11 @@ namespace Interview_Project.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateEmployee([FromBody] AddEmployeeResource addResource)
+        public async Task<IActionResult> CreateEmployee([FromBody] SaveEmployeeResource saveResource)
         {
-            var employeeResourceEmpId = addResource.EmpId;
-            var employeeResourceJobLvl = addResource.JobLvl;
-            var employeeResourceJobId = addResource.JobId;
+            var employeeResourceEmpId = saveResource.EmpId;
+            var employeeResourceJobLvl = saveResource.JobLvl;
+            var employeeResourceJobId = saveResource.JobId;
 
             if (await _validator.ValidateIfEmployeeExisted(employeeResourceEmpId))
                 return BadRequest("The EmpId existed.");
@@ -59,11 +59,11 @@ namespace Interview_Project.Controllers
                 return BadRequest("The job doesn't exist.");
             if (!await _validator.ValidateJobLvlIsWithinTheRangeOfTheGivenJob(employeeResourceJobId,
                 employeeResourceJobLvl))
-                return BadRequest();
-            
-            // TODO: return BadRequest when the employeeResource.PubId doesn't belong to any publishers in the pubs table.
+                return BadRequest("The given job level is not in the range of the job levels of the given job.");
+            if (!await _validator.ValidateIfThePubExists(saveResource.PubId))
+                return BadRequest("The publisher does not exist.");
 
-            var employee = _mapper.Map<AddEmployeeResource, Employee>(addResource);
+            var employee = _mapper.Map<SaveEmployeeResource, Employee>(saveResource);
             await _employeeRepository.AddAsync(employee);
             await _unitOfWork.CompleteAsync();
 
@@ -86,14 +86,23 @@ namespace Interview_Project.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateEmployee(string id, [FromBody] EmployeeResource employeeResource)
+        public async Task<IActionResult> UpdateEmployee(string id, [FromBody] SaveEmployeeResource saveEmployeeResource)
         {
-            // TODO: Add validation code to validate given jobLvl, jobId, pubId, and hireDate values.
             var employee = await _employeeRepository.GetEmployee(id, false);
             if (employee == null)
                 return NotFound();
 
-            _mapper.Map(employeeResource, employee);
+            var employeeResourceJobLvl = saveEmployeeResource.JobLvl;
+            var employeeResourceJobId = saveEmployeeResource.JobId;
+            if (!await _validator.ValidateIfTheJobExists(employeeResourceJobId))
+                return BadRequest("The job doesn't exist.");
+            if (!await _validator.ValidateJobLvlIsWithinTheRangeOfTheGivenJob(employeeResourceJobId,
+                employeeResourceJobLvl))
+                return BadRequest("The given job level is not in the range of the job levels of the given job.");
+            if (!await _validator.ValidateIfThePubExists(saveEmployeeResource.PubId))
+                return BadRequest("The publisher does not exist.");
+
+            _mapper.Map(saveEmployeeResource, employee);
             await _unitOfWork.CompleteAsync();
 
             employee = await _employeeRepository.GetEmployee(id, false);

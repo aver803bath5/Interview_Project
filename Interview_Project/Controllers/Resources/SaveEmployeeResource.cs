@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Interview_Project.Controllers.Resources
 {
-    public class AddEmployeeResource
+    public class SaveEmployeeResource
     {
         [Required]
         [MaxLength(9)]
