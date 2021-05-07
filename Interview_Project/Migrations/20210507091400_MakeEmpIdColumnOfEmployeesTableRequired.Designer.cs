@@ -4,14 +4,16 @@ using Interview_Project.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Interview_Project.Migrations
 {
     [DbContext(typeof(PubsContext))]
-    partial class PubsContextModelSnapshot : ModelSnapshot
+    [Migration("20210507091400_MakeEmpIdColumnOfEmployeesTableRequired")]
+    partial class MakeEmpIdColumnOfEmployeesTableRequired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

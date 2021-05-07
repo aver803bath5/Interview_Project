@@ -6,6 +6,7 @@ namespace Interview_Project.Core.Domain
 {
     public partial class Employee
     {
+        public int Id { get; set; }
         public string EmpId { get; set; }
         public string Fname { get; set; }
         public string Minit { get; set; }
