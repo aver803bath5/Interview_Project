@@ -1,8 +1,5 @@
-using System.Diagnostics;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Interview_Project.Core.Repositories;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Interview_Project.Controllers
 {
@@ -20,9 +17,9 @@ namespace Interview_Project.Controllers
             _publishersRepository = publishersRepository;
         }
 
-        public async Task<bool> ValidateIfEmployeeExisted(string empId)
+        public async Task<bool> ValidateIfEmpIdIsDuplicated(string empId)
         {
-            return await _employeeRepository.GetEmployee(empId) != null;
+            return await _employeeRepository.GetEmployeeByEmpId(empId) != null;
         }
 
         public async Task<bool> ValidateIfTheJobExists(short jobId)

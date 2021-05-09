@@ -8,9 +8,7 @@ namespace Interview_Project.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<Employee> builder)
         {
-            builder.HasKey(e => e.EmpId)
-                .HasName("PK_emp_id")
-                .IsClustered(false);
+            builder.HasKey(e => e.Id);
 
             builder.ToTable("employees");
 
@@ -18,6 +16,7 @@ namespace Interview_Project.Persistence.EntityConfigurations
                 .IsClustered();
 
             builder.Property(e => e.EmpId)
+                .IsRequired()
                 .HasMaxLength(9)
                 .IsUnicode(false)
                 .HasColumnName("emp_id")

@@ -27,7 +27,7 @@ namespace Interview_Project.Persistence.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Employee> GetEmployee(string id, bool includeRelated = true)
+        public async Task<Employee> GetEmployee(int id, bool includeRelated = true)
         {
             if (!includeRelated)
                 return await _context.Employees.FindAsync(id);
@@ -35,7 +35,12 @@ namespace Interview_Project.Persistence.Repositories
             return await  _context.Employees
                 .Include(e => e.Job)
                 .Include(e => e.Pub)
-                .SingleOrDefaultAsync(e => e.EmpId == id);
+                .SingleOrDefaultAsync(e => e.Id == id);
+        }
+
+        public async Task<Employee> GetEmployeeByEmpId(string empId)
+        {
+            return await _context.Employees.SingleOrDefaultAsync(e => e.EmpId == empId);
         }
     }
 }

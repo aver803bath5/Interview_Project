@@ -4,6 +4,7 @@ namespace Interview_Project.Controllers.Resources
 {
     public class EmployeeResource
     {
+        public int Id { get; set; }
         public string EmpId { get; set; }
         public string Fname { get; set; }
         public string Minit { get; set; }
